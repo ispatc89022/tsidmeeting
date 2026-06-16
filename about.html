@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกี่ยวกับผู้สร้าง - About Me</title>
+    
+    <style>
+        /* ตั้งค่าพื้นฐาน */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'ChulaCharasNew', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* กล่องข้อความหลัก */
+        .about-container {
+            background-color: #ffffff;
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ส่วนโปรไฟล์และรูปภาพ */
+        .profile-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%; /* ทำรูปให้เป็นวงกลม */
+            object-fit: cover;
+            border: 4px solid #e2e8f0;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #e2e8f0;
+            margin: 25px 0;
+        }
+
+        /* ส่วนฟอร์มช่องข้อความ */
+        h3, h4 {
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* ช่องพิมพ์ข้อความ (Textarea) */
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #2d3748;
+            resize: vertical; /* ยืดหดในแนวตั้งได้ */
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+        }
+
+        /* ปุ่มกด */
+        .btn-save {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .btn-save:hover {
+            background-color: #2b6cb0;
+        }
+
+        /* ส่วนการแสดงผลหลังบันทึก */
+        #displaySection {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f7fafc;
+            border-left: 4px solid #3182ce;
+            border-radius: 4px;
+        }
+
+        #savedText {
+            color: #4a5568;
+            white-space: pre-line; /* แสดงการขึ้นบรรทัดใหม่ตามที่พิมพ์จริง */
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="about-container">
+        <div class="profile-section">
+            <img src="img01.gif" alt="รูปภาพผู้สร้าง" class="profile-img">
+            <h2>สวัสดีครับ/ค่ะ!</h2>
+            <p class="subtitle">ยินดีต้อนรับสู่หน้าข้อมูลผู้สร้าง</p>
+        </div>
+
+        <hr>
+
+        <div class="creator-form-section">
+            <h3>ข้อมูลเกี่ยวกับผู้สร้าง</h3>
+            <form id="aboutForm">
+                <div class="form-group">
+                    <label for="creatorInfo">เรื่องราวของคุณ:</label>
+                    <textarea 
+                        id="creatorInfo" 
+                        name="creatorInfo" 
+                        rows="5" 
+                        placeholder="พิมพ์ประวัติย่อ ทักษะ หรือแนะนำตัวเองที่นี่..."
+                    ></textarea>
+                </div>
+                <button type="submit" class="btn-save">บันทึกข้อมูล</button>
+            </form>
+            
+            <div id="displaySection" class="hidden">
+                <h4>ข้อมูลปัจจุบันของคุณ:</h4>
+                <p id="savedText"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const aboutForm = document.getElementById('aboutForm');
+            const creatorInfo = document.getElementById('creatorInfo');
+            const displaySection = document.getElementById('displaySection');
+            const savedText = document.getElementById('savedText');
+
+            // โหลดข้อมูลเก่าที่เคยบันทึกไว้ในเบราว์เซอร์มาแสดง (ถ้ามี)
+            const localData = localStorage.getItem('creatorBio');
+            if (localData) {
+                creatorInfo.value = localData;
+                savedText.textContent = localData;
+                displaySection.classList.remove('hidden');
+            }
+
+            // ทำงานเมื่อกดปุ่มบันทึก
+            aboutForm.addEventListener('submit', (event) => {
+                event.preventDefault(); // ป้องกันหน้าเว็บรีเฟรช
+
+                const textInput = creatorInfo.value.trim();
+
+                if (textInput === "") {
+                    alert("กรุณากรอกข้อความก่อนกดบันทึกนะครับ");
+                    return;
+                }
+
+                // บันทึกข้อมูลลง LocalStorage (ปิดเบราว์เซอร์เปิดใหม่ ข้อมูลไม่หาย)
+                localStorage.setItem('creatorBio', textInput);
+
+                // นำข้อความมาอัปเดตบนหน้าจอทันที
+                savedText.textContent = textInput;
+                displaySection.classList.remove('hidden');
+
+                alert("บันทึกข้อมูลเรียบร้อยแล้ว!");
+            });
+        });
+    </script>
+</body>
+</html>
